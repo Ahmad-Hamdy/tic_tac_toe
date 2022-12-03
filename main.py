@@ -13,6 +13,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 
 class Ui_MainWindow(object):
     turn = "player_1"
+    score = [0,0]
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(1003, 826)
@@ -36,6 +37,7 @@ class Ui_MainWindow(object):
 
         self.player_1_score = QtWidgets.QLabel(self.score_board)
         self.player_1_score.setFont(font)
+        self.player_1_score.setText(str(self.score[0]))
         self.player_1_score.setObjectName("player_1_score")
         self.horizontalLayout_2.addWidget(self.player_1_score)
 
@@ -48,6 +50,7 @@ class Ui_MainWindow(object):
 
         self.player_2_score = QtWidgets.QLabel(self.score_board)
         self.player_2_score.setFont(font)
+        self.player_2_score.setText(str(self.score[1]))
         self.player_2_score.setObjectName("player_2_score")
         self.horizontalLayout_2.addWidget(self.player_2_score)
         self.verticalLayout.addWidget(self.score_board)
@@ -104,11 +107,36 @@ class Ui_MainWindow(object):
         self.play_again.clicked.connect(self.new_game)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
+
+
     def new_game(self):
         for row in range(3):
             for col in range(3):
                 self.cell[row][col].setText("")
                 self.cell[row][col].setEnabled(True)
+
+    def check_rows(self):
+        for row in self.cell:
+            if (row[0].text() == row[1].text() == row[2].text() != ""):
+                return row[0].text()
+        else:
+            return ""
+
+    def check_columns(self):
+        for col in range(3):
+            if (self.cell[0][col].text() == self.cell[1][col].text() == self.cell[2][col].text() != ""):
+                return self.cell[0][col].text()
+        else:
+            return ""
+
+    def check_diagonals(self):
+        if (self.cell[0][0].text() == self.cell[1][1].text() == self.cell[2][2].text() != ""):
+            return self.cell[0][0].text()
+        elif(self.cell[0][2].text() == self.cell[1][1].text() == self.cell[2][0].text() != ""):
+            return self.cell[0][2].text()
+        else:
+            return ""
+
 
     def play(self, cell):
         if self.turn == "player_1":
@@ -119,15 +147,23 @@ class Ui_MainWindow(object):
             cell.setText("O")
             cell.setEnabled(False)
             self.turn = "player_1"
+        rows, cols, diags = (self.check_rows(), self.check_columns(), self.check_diagonals())
+        if ("X" in [rows, cols, diags]):
+            self.score[0] += 1
+            self.player_1_score.setText(str(self.score[0]))
+            self.new_game()
+        elif ("O" in [rows, cols, diags]):
+            self.score[1] += 1
+            self.player_2_score.setText(str(self.score[1]))
+            self.new_game()
+
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "Tic Tac Toe"))
         self.score_board.setTitle(_translate("MainWindow", "Score Board"))
         self.player_1.setText(_translate("MainWindow", "Player 1: "))
-        self.player_1_score.setText(_translate("MainWindow", "0"))
         self.player_2.setText(_translate("MainWindow", "Player 2: "))
-        self.player_2_score.setText(_translate("MainWindow", "0"))
         self.play_again.setText(_translate("MainWindow", "Play Again"))
 
 
