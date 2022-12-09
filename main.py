@@ -58,8 +58,7 @@ class Ui_MainWindow(object):
         self.gridLayout_2 = QtWidgets.QGridLayout()
         self.gridLayout_2.setSpacing(0)
         self.gridLayout_2.setObjectName("gridLayout_2")
-
-        
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         
         self.cell = [[QtWidgets.QPushButton(self.play_grid) for _ in range(3)]for _ in range(3)]
         font.setFamily("Tempus Sans ITC")
@@ -70,6 +69,7 @@ class Ui_MainWindow(object):
                 self.cell[row][col].setFont(font)
                 self.cell[row][col].setFlat(True)
                 self.cell[row][col].setObjectName("cell_{0}{1}".format(row, col))
+                self.cell[row][col].setSizePolicy(sizePolicy)
                 self.gridLayout_2.addWidget(self.cell[row][col], row, col, 1, 1)
                 self.cell[row][col].clicked.connect(lambda t, r=row, c=col : self.play(self.cell[r][c]))
 
@@ -81,7 +81,7 @@ class Ui_MainWindow(object):
         self.winner.setAlignment(QtCore.Qt.AlignCenter)
         self.winner.setObjectName("winner")
         self.winner.setHidden(True)
-        self.gridLayout_2.addWidget(self.winner, 0, 0, 3, 3)
+        self.gridLayout_2.addWidget(self.winner, 1, 0, 1, 3)
 
         self.horizontalLayout_3.addLayout(self.gridLayout_2)
         self.verticalLayout.addWidget(self.play_grid)
